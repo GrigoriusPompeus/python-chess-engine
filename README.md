@@ -68,69 +68,59 @@ neural-network evaluator, a REST API, and a UCI interface.
 
 ```
 chess_project/
-  src/chess_project/
-    core/
-      types.py          Colour, piece, move and square definitions.
-                        Protocol interfaces: SearchService, Evaluator,
-                        MoveOrderer.
-      attacks.py        Pre-computed attack tables (knight, king, pawn)
-                        and sliding-piece ray directions.
-      position.py       Mutable board state (1D 64-element list).
-                        Legal and pseudo-legal move generation,
-                        make/unmake.
-      rules.py          Game session wrapper. Tracks move history,
-                        enforces draw rules, detects checkmate and
-                        stalemate.
-
-    engine/
-      interfaces.py     RandomMover baseline (satisfies SearchService).
-      evaluator.py      PeSTO-tuned tapered evaluation with separate
-                        middlegame and endgame piece-square tables,
-                        bishop pair bonus and tempo.
-      ordering.py       MvvLvaOrderer: MVV-LVA capture scoring,
-                        killer moves and history heuristic. Used by
-                        AlphaBetaSearch.
-      search.py         AlphaBetaSearch: modular search that accepts
-                        pluggable Evaluator and MoveOrderer instances.
-                        Zobrist hashing, TranspositionTable, and
-                        repetition detection.
-      ml_evaluator.py   PyTorch neural-network evaluator. Includes
-                        the network definition, training loop and a
-                        CLI for data download / generation / training.
-
-    io/
-      fen.py            FEN parser and formatter.
-      pgn.py            PGN import and export.
-      notation.py       UCI and SAN move parsing / formatting.
-      uci.py            UCI protocol loop for external GUIs.
-
-    api/
-      main.py           FastAPI application. Endpoints for creating
-                        games, submitting moves and querying state.
-                        Loads the engine via lifespan events.
-                        Only needed if you want to run the engine as
-                        a web service.
-
-    db/
-      models.py         MongoDB document model (Beanie ODM) for
-                        persisted games. Only used by the API.
-
-    ui/
-      gui.py            Pygame GUI with start screen, engine brain
-                        selector, board rendering, clocks, move log
-                        and promotion chooser.
-      cli.py            Terminal REPL for playing via stdin/stdout.
-
-  tests/
-    test_perft.py       Move generation correctness (Perft suite).
-    test_position.py    Board state and make/unmake tests.
-    test_fen.py         FEN round-trip tests.
-    test_types.py       Type and helper function tests.
-
-  engine.bat            Windows batch file to launch the UCI engine.
-  model.pt              Trained neural-network weights (generated).
-  train_data.bin        Training data (generated, not committed).
-  pyproject.toml        Build configuration (setuptools).
+├── src/chess_project/
+│   ├── core/
+│   │   ├── types.py          Colour, piece, move and square definitions.
+│   │   │                     Protocol interfaces: SearchService, Evaluator,
+│   │   │                     MoveOrderer.
+│   │   ├── attacks.py        Pre-computed attack tables (knight, king, pawn)
+│   │   │                     and sliding-piece ray directions.
+│   │   ├── position.py       Mutable board state (1D 64-element list).
+│   │   │                     Legal and pseudo-legal move generation,
+│   │   │                     make/unmake.
+│   │   └── rules.py          Game session wrapper. Tracks move history,
+│   │                         enforces draw rules, detects checkmate and
+│   │                         stalemate.
+│   ├── engine/
+│   │   ├── interfaces.py     RandomMover baseline (satisfies SearchService).
+│   │   ├── evaluator.py      PeSTO-tuned tapered evaluation with separate
+│   │   │                     middlegame and endgame piece-square tables,
+│   │   │                     bishop pair bonus and tempo.
+│   │   ├── ordering.py       MvvLvaOrderer: MVV-LVA capture scoring,
+│   │   │                     killer moves and history heuristic.
+│   │   ├── search.py         AlphaBetaSearch: modular search with Zobrist
+│   │   │                     hashing, transposition table and repetition
+│   │   │                     detection. Pluggable Evaluator and MoveOrderer.
+│   │   └── ml_evaluator.py   PyTorch neural-network evaluator. Network
+│   │                         definition, training loop and CLI for data
+│   │                         download / generation / training.
+│   ├── io/
+│   │   ├── fen.py            FEN parser and formatter.
+│   │   ├── pgn.py            PGN import and export.
+│   │   ├── notation.py       UCI and SAN move parsing / formatting.
+│   │   └── uci.py            UCI protocol loop for external GUIs.
+│   ├── api/
+│   │   └── main.py           FastAPI application. Endpoints for creating
+│   │                         games, submitting moves and querying state.
+│   │                         Only needed for the web service.
+│   ├── db/
+│   │   └── models.py         MongoDB document model (Beanie ODM) for
+│   │                         persisted games. Only used by the API.
+│   └── ui/
+│       ├── gui.py            Pygame GUI with start screen, engine brain
+│       │                     selector, board rendering, clocks, move log
+│       │                     and promotion chooser.
+│       └── cli.py            Terminal REPL for playing via stdin/stdout.
+├── tests/
+│   ├── test_perft.py         Move generation correctness (Perft suite).
+│   ├── test_position.py      Board state and make/unmake tests.
+│   ├── test_fen.py           FEN round-trip tests.
+│   └── test_types.py         Type and helper function tests.
+├── assets/                   Screenshots for the README.
+├── engine.bat                Windows batch file to launch the UCI engine.
+├── model.pt                  Trained neural-network weights.
+├── pyproject.toml            Build configuration (setuptools).
+└── .gitignore
 ```
 
 ---
