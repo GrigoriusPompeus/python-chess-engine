@@ -8,6 +8,16 @@ The project started as a pure-Python engine with Perft-verified move
 generation and has since been extended with alpha-beta search, a
 neural-network evaluator, a REST API, and a UCI interface.
 
+<p align="center">
+  <img src="assets/start_screen.png" alt="Start screen" width="360" />
+  &nbsp;&nbsp;
+  <img src="assets/gameplay.png" alt="Gameplay" width="480" />
+</p>
+<p align="center">
+  <em>Start screen with engine and time control selection (left).
+  Gameplay with clocks, move log and Lichess-style board (right).</em>
+</p>
+
 ---
 
 ## Table of Contents
@@ -24,6 +34,7 @@ neural-network evaluator, a REST API, and a UCI interface.
 10. [REST API (optional)](#rest-api-optional)
 11. [Testing](#testing)
 12. [External Chess GUIs](#external-chess-guis)
+13. [Future Plans](#future-plans)
 
 ---
 
@@ -520,6 +531,42 @@ A free chess GUI with UCI and WinBoard support.
 
 To add this engine in Arena: go to Engines > Install New Engine, browse
 to `engine.bat` and confirm.
+
+---
+
+## Future Plans
+
+Things on the roadmap, roughly in order of priority:
+
+- **Online multiplayer.** WebSocket-based matchmaking so two players can
+  play each other over the network in real time. The REST API already
+  handles game state -- the main work is adding a lobby, pairing, and
+  live move streaming.
+
+- **Web frontend.** A browser-based board UI (likely React or plain JS)
+  that talks to the API. Would replace the need for a local Pygame
+  install and make the engine accessible to anyone with a browser.
+
+- **Stronger NNUE.** The current network is a 768 → 256 → 32 → 1
+  architecture trained on 2 million Stockfish-labelled positions. There
+  is plenty of room to improve: larger training sets, deeper networks,
+  incremental update (true NNUE-style accumulator), and better data
+  filtering.
+
+- **Retrain with self-play reinforcement.** Use the engine's own games
+  at higher depths as training signal, iterating between playing and
+  retraining to bootstrap quality without relying on external labels.
+
+- **Opening book.** Load a polyglot or custom opening book so the engine
+  plays sensible theory in the first few moves instead of searching from
+  scratch every time.
+
+- **Endgame tablebases.** Syzygy tablebase probing for perfect play in
+  positions with 6 or fewer pieces.
+
+- **Search improvements.** Aspiration windows, principal variation
+  search (PVS), singular extensions, and multi-threaded (Lazy SMP)
+  search to use all available cores.
 
 ---
 
